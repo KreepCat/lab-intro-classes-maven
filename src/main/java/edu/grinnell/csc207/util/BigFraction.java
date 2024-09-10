@@ -6,7 +6,7 @@ import java.math.BigInteger;
  * A simple implementation of arbitrary-precision Fractions.
  *
  * @author Samuel A. Rebelsky
- * @author YOUR NAME HERE
+ * @author Alex Pollock, Myles Bohrer-Purnell
  */
 public class BigFraction {
   // +------------------+---------------------------------------------
@@ -77,6 +77,20 @@ public class BigFraction {
     this.denom = BigInteger.valueOf(denominator);
   } // BigFraction(int, int)
 
+  public BigFraction(String str){
+    int slashPos = -1;
+    for (int i =0; i<str.length(); i++){
+      if(str.charAt(i) == '/'){
+        slashPos =i;
+        break;
+      }
+    }
+    String numString = str.substring(0, slashPos);
+    String denomString = str.substring(slashPos+1, str.length());
+    this.num = new BigInteger(numString);
+    this.denom = new BigInteger(denomString);
+  }
+
   /**
    * Build a new fraction by parsing a string.
    *
@@ -85,10 +99,7 @@ public class BigFraction {
    * @param str
    *   The fraction in string form
    */
-  public BigFraction(String str) {
-    this.num = DEFAULT_NUMERATOR;
-    this.denom = DEFAULT_DENOMINATOR;
-  } // BigFraction
+
 
   // +---------+------------------------------------------------------
   // | Methods |
@@ -126,6 +137,18 @@ public class BigFraction {
     return new BigFraction(resultNumerator, resultDenominator);
   } // add(BigFraction)
 
+  public BigFraction multiply(BigFraction frac){
+    BigInteger numerator = this.num.multiply(frac.num);
+    BigInteger denominator = this.denom.multiply(frac.denom);
+
+    return new BigFraction(numerator, denominator);
+  }
+
+  public BigFraction fractional(){
+    BigInteger remainder = this.num.mod(this.denom);
+
+    return new BigFraction(remainder, this.denom);
+  }
   /**
    * Get the denominator of this fraction.
    *
